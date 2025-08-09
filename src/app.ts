@@ -6,6 +6,7 @@ import { connectDB } from './Database/db';
 import userRoutes from './Authentication/user.routes';
 import candidateRoutes from './Module/Candidiate/candidiate.routes';
 import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes';
+
 dotenv.config();
 
 const app = express();
@@ -16,33 +17,19 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-
-// Explicitly handle all OPTIONS requests for CORS preflight
-app.options('*', (req, res) => {
-  const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
-    return res.sendStatus(200);
-  }
-  res.sendStatus(403);
-});
+// No need for explicit app.options('*', ...) — cors handles it
 
 app.use(express.json());
 
 connectDB()
   .then(() => console.log('✅ Database connected successfully'))
-  .catch((err) => console.error(' Database connection failed:', err));
+  .catch((err) => console.error('❌ Database connection failed:', err));
 
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
@@ -52,8 +39,7 @@ app.get('/', (_req, res) => {
   res.send('Server is running!');
 });
 
-
-// Catch-all 404 for debugging, with CORS headers
+// Catch-all 404 with CORS headers
 app.use((req, res) => {
   const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
   res.setHeader('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '');
