@@ -1,7 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import serverless from 'serverless-http';
 import { connectDB } from '../src/Database/db';
 
 import userRoutes from '../src/Authentication/user.routes';
@@ -9,7 +8,6 @@ import candidateRoutes from '../src/Module/Candidiate/candidiate.routes';
 import employeeLeaveRoutes from '../src/Module/EmployeeLeave/employeeleave.routes.js';
 
 dotenv.config();
-
 const app = express();
 
 const allowedOrigins = [
@@ -20,9 +18,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
   },
   credentials: true
@@ -47,4 +43,4 @@ app.get('/', (_req, res) => {
   res.send('Server is running!');
 });
 
-export default serverless(app);
+export default app; // important for serverless
