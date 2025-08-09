@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './Database/db';
-
+import { Request, Response, NextFunction } from 'express';
 import userRoutes from './Authentication/user.routes';
 import candidateRoutes from './Module/Candidiate/candidiate.routes';
 import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes';
@@ -31,9 +31,17 @@ connectDB()
   .then(() => console.log(' Database connected successfully'))
   .catch((err) => console.error('Database connection failed:', err));
 
+
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
+
+// Global error handler
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ status: 500, message: 'Internal Server Error', error: err?.message || err });
+});
 
 app.get('/', (_req, res) => {
   res.send('Server is running!');
