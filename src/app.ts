@@ -32,19 +32,28 @@ connectDB()
   .catch((err) => console.error('Database connection failed:', err));
 
 
+
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
 
-// Global error handler
-
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error('Global error handler:', err);
-  res.status(500).json({ status: 500, message: 'Internal Server Error', error: err?.message || err });
-});
 
 app.get('/', (_req, res) => {
   res.send('Server is running!');
+});
+
+// Catch-all 404 with CORS headers
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(404).send(`Not found: ${req.method} ${req.originalUrl}`);
+});
+
+// Global error handler (should be last)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ status: 500, message: 'Internal Server Error', error: err?.message || err });
 });
 
 // Catch-all 404 with CORS headers
