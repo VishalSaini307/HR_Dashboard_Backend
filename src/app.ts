@@ -44,8 +44,12 @@ app.get('/', (_req, res) => {
   res.send('Server is running!');
 });
 
-// Catch-all 404 for debugging
+
+// Catch-all 404 for debugging, with CORS headers
 app.use((req, res) => {
+  const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.status(404).send(`Not found: ${req.method} ${req.originalUrl}`);
 });
 
