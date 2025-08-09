@@ -12,11 +12,22 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:5173', 
-  credentials: true              
-}));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://hr-dashboard-frontend-iota.vercel.app'
+];
 
+app.use(cors({
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Connect to DB
