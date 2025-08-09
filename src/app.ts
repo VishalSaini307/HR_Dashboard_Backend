@@ -12,6 +12,7 @@ dotenv.config();
 
 const app = express();
 
+
 const allowedOrigins = [
   'http://localhost:5173',
   'https://hr-dashboard-frontend-iota.vercel.app'
@@ -19,7 +20,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
@@ -28,14 +28,22 @@ app.use(cors({
   },
   credentials: true
 }));
+
+
+app.options('*', cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.json());
 
-// Connect to DB
+
 connectDB()
   .then(() => console.log('Database connected successfully'))
   .catch((err) => console.error('Database connection failed:', err));
 
-// Routes
+
+
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
@@ -44,5 +52,4 @@ app.get('/', (_req, res) => {
   res.send('Server is running!');
 });
 
-
-export default serverless(app);
+export default app;
