@@ -83,13 +83,13 @@ export const downloadEmployeeLeaveDocument = async (req: Request, res: Response)
 		}
 		fileUrl = fileUrl.replace('/upload/', '/upload/fl_attachment/');
 
-		// Check if the file exists by making a HEAD request
+	
 		const https = require('https');
 		https.get(fileUrl, { method: 'HEAD' }, (response: any) => {
 			if (response.statusCode === 404) {
 				return res.status(404).json({ error: 'Document file not found on Cloudinary.' });
 			}
-			// Redirect if file exists
+			
 			res.redirect(fileUrl);
 		}).on('error', (err: any) => {
 			res.status(500).json({ error: 'Error checking file on Cloudinary.' });

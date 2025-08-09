@@ -32,10 +32,10 @@ export const cloudinaryUpload = async (req: Request, res: Response, next: NextFu
         { folder: 'leave-documents', resource_type: 'auto' },
         (error, result) => {
           if (error) {
-            console.error('❌ Cloudinary upload error:', error);
+            console.error('Cloudinary upload error:', error);
             return reject(new Error('File upload failed'));
           }
-          // Set both fields for downstream compatibility
+          
           req.body.documents = result!.secure_url;
           req.body.resume = result!.secure_url;
           console.log('✅ Cloudinary upload success');

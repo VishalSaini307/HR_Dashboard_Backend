@@ -4,15 +4,14 @@ import axios from 'axios';
 
 export const createCandidate = async (req: Request, res: Response) => {
   try {
-    console.log('Incoming candidate data:', req.body); // Log frontend data
-    console.log('Incoming file:', req.file); // Log file data
+    console.log('Incoming candidate data:', req.body); 
+    console.log('Incoming file:', req.file); 
 
-    // If file was uploaded and Cloudinary middleware set req.body.resume, use it
     if (req.file && req.body.documents) {
       req.body.resume = req.body.documents;
     }
 
-    // Validate required fields
+
     const requiredFields = ['fullName', 'email', 'phoneNumber', 'position', 'experience', 'resume'];
     for (const field of requiredFields) {
       if (!req.body[field]) {
@@ -20,7 +19,7 @@ export const createCandidate = async (req: Request, res: Response) => {
       }
     }
 
-    // Create candidate
+   
     const candidate = await Candidate.create({
       fullName: req.body.fullName,
       email: req.body.email,
@@ -95,13 +94,12 @@ export const downloadCandidateResume = async (req: Request, res: Response) => {
     }
     url = url.replace('/upload/', '/upload/fl_attachment/');
 
-    // Check if the file exists by making a HEAD request
     const https = require('https');
     https.get(url, { method: 'HEAD' }, (response: any) => {
       if (response.statusCode === 404) {
         return res.status(404).json({ error: 'Resume file not found on Cloudinary.' });
       }
-      // Redirect if file exists
+    
       res.redirect(url);
     }).on('error', (err: any) => {
       res.status(500).json({ error: 'Error checking file on Cloudinary.' });

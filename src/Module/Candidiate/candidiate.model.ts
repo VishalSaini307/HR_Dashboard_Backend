@@ -20,7 +20,7 @@ const CandidateSchema: Schema = new Schema({
   experience: { type: String, required: true },
   dateJoining: { type: Date, required: false },
   attendanceStatus: { type: String, enum: ['Present', 'Absent', 'Medical Leave','Work From Home'], default: 'Present' },
-  resume: { type: String, required: true }, // Store file path or base64 string
+  resume: { type: String, required: true }, 
   status: {
     type: String,
     enum: ['New', 'Schduled', 'Ongoing', 'Selected', 'Rejected'],
