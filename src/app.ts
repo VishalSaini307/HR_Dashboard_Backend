@@ -24,10 +24,19 @@ app.use(cors({
   credentials: true
 }));
 
-app.options('*', cors({
-  origin: allowedOrigins,
-  credentials: true
-}));
+
+// Explicitly handle all OPTIONS requests for CORS preflight
+app.options('*', (req, res) => {
+  const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+    return res.sendStatus(200);
+  }
+  res.sendStatus(403);
+});
 
 app.use(express.json());
 
