@@ -13,7 +13,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://hr-dashboard-frontend-iota.vercel.app'
+  'https://hr-dashboard-backend-vishal.vercel.app',  // backend URL if needed for some reason
 ];
 
 app.use(cors({
