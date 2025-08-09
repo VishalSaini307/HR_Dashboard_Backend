@@ -1,18 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors'; //
-import { connectDB } from './Database/db';
+import cors from 'cors';
+import serverless from 'serverless-http';
+import { connectDB } from '../src/Database/db';
 
-
-import userRoutes from './Authentication/user.routes';
-import candidateRoutes from './Module/Candidiate/candidiate.routes';
-import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes';
-
+import userRoutes from '../src/Authentication/user.routes';
+import candidateRoutes from '../src/Module/Candidiate/candidiate.routes';
+import employeeLeaveRoutes from '../src/Module/EmployeeLeave/employeeleave.routes.js';
 
 dotenv.config();
 
 const app = express();
-
 
 app.use(cors({
   origin: 'http://localhost:5173', 
@@ -21,27 +19,19 @@ app.use(cors({
 
 app.use(express.json());
 
-connectDB().then(() => {
-  console.log('Database connected successfully');
-}).catch((err) => {
-  console.error('Database connection failed:', err);
-});
+// Connect to DB
+connectDB()
+  .then(() => console.log('Database connected successfully'))
+  .catch((err) => console.error('Database connection failed:', err));
 
-
-
-
+// Routes
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
-
 
 app.get('/', (_req, res) => {
   res.send('Server is running!');
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
 
-
+export default serverless(app);
