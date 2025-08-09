@@ -28,8 +28,8 @@ app.use(cors({
 app.use(express.json());
 
 connectDB()
-  .then(() => console.log('✅ Database connected successfully'))
-  .catch((err) => console.error('❌ Database connection failed:', err));
+  .then(() => console.log(' Database connected successfully'))
+  .catch((err) => console.error('Database connection failed:', err));
 
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);

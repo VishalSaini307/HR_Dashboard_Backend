@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "api/index.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "api/index.ts" }
+  ],
+  "name": "Hr_Dashboard_Backend",
+  "alias": ["hr-dashboard-backend"]
+}
