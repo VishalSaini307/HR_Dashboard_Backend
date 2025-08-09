@@ -8,6 +8,5 @@
       "src": "/api/(.*)",
       "dest": "api/index.ts"
     }
-  ],
-  "alias": ["hr-dashboard-backend"]
+  ]
 }
