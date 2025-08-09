@@ -35,9 +35,9 @@ connectDB()
   .then(() => console.log('✅ Database connected successfully'))
   .catch((err) => console.error('❌ Database connection failed:', err));
 
-app.use('/api', userRoutes);
-app.use('/api/candidates', candidateRoutes);
-app.use('/api/employee-leaves', employeeLeaveRoutes);
+app.use('/', userRoutes);
+app.use('/candidates', candidateRoutes);
+app.use('/employee-leaves', employeeLeaveRoutes);
 
 
 app.get('/', (_req, res) => {
