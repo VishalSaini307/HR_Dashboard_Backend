@@ -7,11 +7,12 @@ import {
   deleteLeave,
   downloadLeaveDocument
 } from './leaves.controller';
-import { uploadResume, cloudinaryUpload } from '../../Middleware/resumeMiddleware';
+import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
+
 
 const router = Router();
 
-router.post('/create', uploadResume, cloudinaryUpload, createLeave);
+router.post('/create', uploadFile, cloudinaryUpload, createLeave);
 router.get('/getall', getLeaves);
 router.get('/getbyid/:id', getLeaveById);
 router.put('/update/:id', updateLeave);

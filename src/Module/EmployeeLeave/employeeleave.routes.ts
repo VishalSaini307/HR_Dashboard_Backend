@@ -1,5 +1,5 @@
 import express from 'express';
-import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware';
+import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
 import {
 	createEmployeeLeave,
 	getEmployeeLeaves,
