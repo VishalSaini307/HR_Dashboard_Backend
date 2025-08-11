@@ -13,7 +13,8 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://hr-dashboard-backend-vishal.vercel.app'
+  'https://hr-dashboard-backend-vishal.vercel.app',
+   /\.vercel\.app$/
 ];
 
 app.use(cors({
