@@ -1,8 +1,8 @@
+
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './Database/db.js';
-
 import userRoutes from './Authentication/user.routes.js';
 import candidateRoutes from './Module/Candidiate/candidiate.routes.js';
 import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes.js';
@@ -69,3 +69,5 @@ app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
 });
 
 export default app;
+
+
