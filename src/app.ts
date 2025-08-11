@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './Database/db';
-
+import { Request, Response, NextFunction } from 'express';
 import userRoutes from './Authentication/user.routes';
 import candidateRoutes from './Module/Candidiate/candidiate.routes';
 import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes';
@@ -13,7 +13,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://hr-dashboard-frontend-iota.vercel.app'
+  'https://hr-dashboard-backend-vishal.vercel.app',  // backend URL if needed for some reason
 ];
 
 // CORS middleware with dynamic origin check & logging
@@ -38,16 +38,47 @@ app.use(express.json());
 
 // Database connection
 connectDB()
-  .then(() => console.log('Database connected successfully'))
+  .then(() => console.log(' Database connected successfully'))
   .catch((err) => console.error('Database connection failed:', err));
+
+
 
 // Routes
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
 
+
 app.get('/', (_req, res) => {
   res.send('Server is running!');
+});
+
+// Catch-all 404 with CORS headers
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(404).send(`Not found: ${req.method} ${req.originalUrl}`);
+});
+
+// Global error handler (should be last)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ status: 500, message: 'Internal Server Error', error: err?.message || err });
+});
+
+// Catch-all 404 with CORS headers
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(404).send(`Not found: ${req.method} ${req.originalUrl}`);
+});
+
+// Global error handler (should be last)
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({ status: 500, message: 'Internal Server Error', error: err?.message || err });
 });
 
 // Catch-all 404 with CORS headers
