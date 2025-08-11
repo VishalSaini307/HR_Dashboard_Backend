@@ -7,7 +7,7 @@ import {
   updateCandidate,
   deleteCandidate,
   downloadCandidateResume
-} from './candidiate.controller';
+} from './candidiate.controller.js';
 import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
 
 const router = Router();

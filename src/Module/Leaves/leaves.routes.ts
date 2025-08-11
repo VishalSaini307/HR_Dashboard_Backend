@@ -6,7 +6,7 @@ import {
   updateLeave,
   deleteLeave,
   downloadLeaveDocument
-} from './leaves.controller';
+} from './leaves.controller.js';
 import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
 
 const router = Router();

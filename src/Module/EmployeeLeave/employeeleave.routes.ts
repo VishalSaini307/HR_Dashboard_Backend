@@ -5,9 +5,9 @@ import {
 	getEmployeeLeaves,
 	getEmployeeLeaveById,
 	updateEmployeeLeave,
-	deleteEmployeeLeave
-} from './employeeleave.controller';
-import { downloadEmployeeLeaveDocument } from './employeeleave.controller';
+	deleteEmployeeLeave,
+	downloadEmployeeLeaveDocument
+} from './employeeleave.controller.js';
 
 const router = express.Router();
 

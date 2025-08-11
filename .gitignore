@@ -26,3 +26,4 @@ coverage/
 # Optional: ignore test output
 *.test.js
 *.spec.js
+.vercel
