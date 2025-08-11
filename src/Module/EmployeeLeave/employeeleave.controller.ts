@@ -1,8 +1,8 @@
 
 
 import axios from 'axios';
-import EmployeeLeave from './employeeleave.model';
 import { Request, Response } from 'express';
+import EmployeeLeave from '../Employeeleave/employeeleave.model';
 
 export const createEmployeeLeave = async (req: Request, res: Response) => {
 	try {

@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDB } from './Database/db.js';
 import userRoutes from './Authentication/user.routes.js';
-import candidateRoutes from './Module/Candidiate/candidiate.routes.js';
-import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes.js';
+import candidateRoutes from './Module/Candidate/candidiate.routes.js';
+import employeeLeaveRoutes from './Module/Employeeleave/employeeleave.routes.js';
 
 dotenv.config();
 

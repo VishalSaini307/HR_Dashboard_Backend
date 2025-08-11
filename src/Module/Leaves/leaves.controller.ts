@@ -1,4 +1,4 @@
-import Leave from './leaves.models';
+import Leave from './leaves.models.js';
 import { Request, Response } from 'express';
 
 // Create a new leave
