@@ -1,5 +1,4 @@
 import express from 'express';
-import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
 import {
 	createEmployeeLeave,
 	getEmployeeLeaves,
@@ -8,6 +7,7 @@ import {
 	deleteEmployeeLeave,
 	downloadEmployeeLeaveDocument
 } from './employeeleave.controller.js';
+import { cloudinaryUpload, uploadFile } from '../../Middleware/resumeMiddleware.js';
 
 const router = express.Router();
 

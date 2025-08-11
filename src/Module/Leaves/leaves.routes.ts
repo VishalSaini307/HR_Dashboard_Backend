@@ -7,7 +7,7 @@ import {
   deleteLeave,
   downloadLeaveDocument
 } from './leaves.controller.js';
-import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
+import { cloudinaryUpload, uploadFile } from '../../Middleware/resumeMiddleware.js';
 
 const router = Router();
 
