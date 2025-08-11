@@ -10,7 +10,6 @@ import {
 } from './candidiate.controller';
 import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
 
-
 const router = Router();
 
 router.post('/create', uploadFile, cloudinaryUpload, createCandidate);
