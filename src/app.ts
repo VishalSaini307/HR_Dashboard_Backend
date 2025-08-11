@@ -1,10 +1,11 @@
 import express, { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { connectDB } from './Database/db';
-import userRoutes from './Authentication/user.routes';
-import candidateRoutes from './Module/Candidiate/candidiate.routes';
-import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes';
+import { connectDB } from './Database/db.js';
+
+import userRoutes from './Authentication/user.routes.js';
+import candidateRoutes from './Module/Candidiate/candidiate.routes.js';
+import employeeLeaveRoutes from './Module/EmployeeLeave/employeeleave.routes.js';
 
 dotenv.config();
 
@@ -12,10 +13,9 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://hr-dashboard-backend-vishal.vercel.app',
+  'https://hr-dashboard-backend-vishal.vercel.app'
 ];
 
-// CORS middleware
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -35,7 +35,7 @@ app.use(express.json());
 
 // Connect to DB
 connectDB()
-  .then(() => console.log('✅ Database connected successfully'))
+  .then(() => console.log('✅ Database connection established'))
   .catch((err) => console.error('❌ Database connection failed:', err));
 
 // Routes
@@ -43,6 +43,7 @@ app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
 
+// Root route
 app.get('/', (_req, res) => {
   res.send('Server is running!');
 });
