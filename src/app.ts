@@ -16,21 +16,32 @@ const allowedOrigins = [
   'https://hr-dashboard-frontend-iota.vercel.app'
 ];
 
+// CORS middleware with dynamic origin check & logging
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(`❌ CORS blocked for origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// No need for explicit app.options('*', ...) — cors handles it
+//  Explicitly handle OPTIONS preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 
+// Database connection
 connectDB()
-  .then(() => console.log('✅ Database connected successfully'))
-  .catch((err) => console.error('❌ Database connection failed:', err));
+  .then(() => console.log('Database connected successfully'))
+  .catch((err) => console.error('Database connection failed:', err));
 
+// Routes
 app.use('/api', userRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/employee-leaves', employeeLeaveRoutes);
@@ -42,8 +53,10 @@ app.get('/', (_req, res) => {
 // Catch-all 404 with CORS headers
 app.use((req, res) => {
   const origin = typeof req.headers.origin === 'string' ? req.headers.origin : '';
-  res.setHeader('Access-Control-Allow-Origin', allowedOrigins.includes(origin) ? origin : '');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
   res.status(404).send(`Not found: ${req.method} ${req.originalUrl}`);
 });
 
