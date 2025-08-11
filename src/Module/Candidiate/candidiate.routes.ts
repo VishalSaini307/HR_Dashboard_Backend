@@ -8,7 +8,7 @@ import {
   deleteCandidate,
   downloadCandidateResume
 } from './candidiate.controller.js';
-import { uploadFile, cloudinaryUpload } from '../../Middleware/resume.middleware';
+import { uploadFile, cloudinaryUpload } from '../../Middleware/resumeMiddleware.js';
 
 
 const router = Router();

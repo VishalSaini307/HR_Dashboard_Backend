@@ -1,4 +1,4 @@
-import Candidate from './candidiate.model';
+import Candidate from './candidiate.model.js';
 import { Request, Response } from 'express';
 import axios from 'axios';
 
