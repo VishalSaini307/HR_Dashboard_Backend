@@ -7,7 +7,7 @@ import {
   updateCandidate,
   deleteCandidate,
   downloadCandidateResume
-} from './candidiate.controller';
+} from './candidiate.controller.js';
 import { uploadFile, cloudinaryUpload } from '../../Middleware/resume.middleware';
 
 
