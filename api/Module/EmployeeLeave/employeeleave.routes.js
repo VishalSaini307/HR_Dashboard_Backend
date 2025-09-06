@@ -1,0 +1,11 @@
+import express from 'express';
+import { createEmployeeLeave, getEmployeeLeaves, getEmployeeLeaveById, updateEmployeeLeave, deleteEmployeeLeave, downloadEmployeeLeaveDocument } from '../EmployeeLeave/employeeleave.controller';
+import { cloudinaryUpload, uploadFile } from '../../Middleware/resumeMiddleware.js';
+const router = express.Router();
+router.post('/', uploadFile, cloudinaryUpload, createEmployeeLeave);
+router.get('/', getEmployeeLeaves);
+router.get('/:id', getEmployeeLeaveById);
+router.put('/:id', updateEmployeeLeave);
+router.get('/:id/download-document', downloadEmployeeLeaveDocument);
+router.delete('/:id', deleteEmployeeLeave);
+export default router;

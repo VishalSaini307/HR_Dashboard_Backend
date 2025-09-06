@@ -7,9 +7,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "dist",
+    "outDir": "api",
     "rootDir": "src",
-
   },
  "include": ["src/**/*"],
   "exclude": ["node_modules"],
