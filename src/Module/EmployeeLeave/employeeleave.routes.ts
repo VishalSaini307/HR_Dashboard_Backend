@@ -6,7 +6,7 @@ import {
 	updateEmployeeLeave,
 	deleteEmployeeLeave,
 	downloadEmployeeLeaveDocument
-} from '../EmployeeLeave/employeeleave.controller';
+} from '../EmployeeLeave/employeeleave.controller.js';
 import { cloudinaryUpload, uploadFile } from '../../Middleware/resumeMiddleware.js';
 
 const router = express.Router();
