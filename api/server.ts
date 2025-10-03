@@ -1,4 +1,14 @@
-import app from '../dist/app.js'; 
-import serverless from 'serverless-http';
+import { VercelRequest, VercelResponse } from '@vercel/node';
 
-export const handler = serverless(app);
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+) {
+  // Simple test response
+  res.json({
+    message: "HR Dashboard Backend is working!",
+    status: "OK", 
+    timestamp: new Date().toISOString(),
+    path: req.url
+  });
+}

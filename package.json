@@ -2,7 +2,7 @@
   "name": "hr_dashboard",
   "version": "1.0.0",
   "type": "module",
-  "scripts": {
+ "scripts": {
     "dev": "nodemon -e ts --watch src --exec \"node --no-warnings --loader ts-node/esm src/server.ts\"",
     "build": "tsc",
     "start": "node dist/src/server.js",
