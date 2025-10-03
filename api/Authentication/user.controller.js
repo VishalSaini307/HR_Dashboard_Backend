@@ -1,12 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { User } from './user.model';
+import { User } from './user.model.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 const JWT_EXPIRES_IN = '2h';
 // Registration
 export const register = async (req, res) => {
     const { fullName, email, password, confirmPassword } = req.body;
-    console.log('Registration request body:', req.body);
     // Basic validation
     if (!fullName || !email || !password || !confirmPassword) {
         return res.status(400).json({ message: 'All fields are required.' });
