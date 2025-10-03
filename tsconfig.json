@@ -3,17 +3,16 @@
     "target": "ES2020",
     "module": "ESNext",
     "moduleResolution": "node",
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "skipLibCheck": true,
-    "outDir": "api",
-    "rootDir": "src",
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
   },
- "include": ["src/**/*"],
-  "exclude": ["node_modules"],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  }
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
