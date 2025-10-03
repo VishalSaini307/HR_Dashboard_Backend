@@ -1,2 +1,4 @@
-import app from "../dist/app.js"; // after TypeScript compilation
-import serverless from "serverless-http"
+import app from'../dist/app.js'; // always use relative path with .js
+import serverless from 'serverless-http';
+
+export const handler = serverless(app);
