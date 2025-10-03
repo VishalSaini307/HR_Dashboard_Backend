@@ -13,7 +13,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://hr-dashboard-backend-vishal.vercel.app",
-  /\.vercel\.app$/ // ✅ regex for preview deployments
+  /\.vercel\.app$/
 ];
 
 app.use(
