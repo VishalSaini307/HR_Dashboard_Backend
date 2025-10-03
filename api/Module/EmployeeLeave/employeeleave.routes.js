@@ -1,5 +1,5 @@
 import express from 'express';
-import { createEmployeeLeave, getEmployeeLeaves, getEmployeeLeaveById, updateEmployeeLeave, deleteEmployeeLeave, downloadEmployeeLeaveDocument } from '../EmployeeLeave/employeeleave.controller';
+import { createEmployeeLeave, getEmployeeLeaves, getEmployeeLeaveById, updateEmployeeLeave, deleteEmployeeLeave, downloadEmployeeLeaveDocument } from './employeeleave.controller.js';
 import { cloudinaryUpload, uploadFile } from '../../Middleware/resumeMiddleware.js';
 const router = express.Router();
 router.post('/', uploadFile, cloudinaryUpload, createEmployeeLeave);

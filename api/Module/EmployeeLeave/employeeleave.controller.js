@@ -1,4 +1,4 @@
-import EmployeeLeave from '../EmployeeLeave/employeeleave.model';
+import EmployeeLeave from './employeeleave.model.js';
 export const createEmployeeLeave = async (req, res) => {
     try {
         const requiredFields = ['employeeName', 'designation', 'leaveDate', 'reason'];
