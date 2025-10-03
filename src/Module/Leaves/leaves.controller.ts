@@ -4,8 +4,10 @@ import { Request, Response } from 'express';
 // Create a new leave
 export const createLeave = async (req: Request, res: Response) => {
   try {
-    console.log('Incoming leave data:', req.body);
-    console.log('Incoming file:', req.file);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Incoming leave data:', req.body);
+      console.log('Incoming file:', req.file);
+    }
 
     // Required fields from form
     const requiredFields = ['employee', 'designation', 'leaveDate', 'reason'];

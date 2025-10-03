@@ -4,8 +4,10 @@ import axios from 'axios';
 
 export const createCandidate = async (req: Request, res: Response) => {
   try {
-    console.log('Incoming candidate data:', req.body); 
-    console.log('Incoming file:', req.file); 
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Incoming candidate data:', req.body);
+      console.log('Incoming file:', req.file);
+    }
 
     if (req.file && req.body.documents) {
       req.body.resume = req.body.documents;

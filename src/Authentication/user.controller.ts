@@ -9,7 +9,9 @@ const JWT_EXPIRES_IN = '2h';
 // Registration
 export const register = async (req: Request, res: Response) => {
   const { fullName, email, password, confirmPassword } = req.body;
-  console.log('Registration request body:', req.body);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Registration request body:', req.body);
+  }
   // Basic validation
   if (!fullName || !email || !password || !confirmPassword) {
     return res.status(400).json({ message: 'All fields are required.' });

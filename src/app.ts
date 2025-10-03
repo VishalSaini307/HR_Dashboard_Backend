@@ -28,7 +28,9 @@ app.use(
       ) {
         callback(null, true);
       } else {
-        console.log(`❌ CORS blocked for origin: ${origin}`);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`❌ CORS blocked for origin: ${origin}`);
+        }
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -44,7 +46,11 @@ app.use(express.static("public"));
 
 // ✅ Connect to DB
 connectDB()
-  .then(() => console.log("✅ Database connection established"))
+  .then(() => {
+    if (process.env.NODE_ENV !== 'production') {
+      console.log("✅ Database connection established");
+    }
+  })
   .catch((err) => console.error("❌ Database connection failed:", err));
 
 // ✅ Routes

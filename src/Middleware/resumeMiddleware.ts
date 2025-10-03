@@ -38,7 +38,9 @@ export const cloudinaryUpload = async (req: Request, res: Response, next: NextFu
           
           req.body.documents = result!.secure_url;
           req.body.resume = result!.secure_url;
-          console.log('✅ Cloudinary upload success');
+            if (process.env.NODE_ENV !== 'production') {
+              console.log('✅ Cloudinary upload success');
+            }
           next();
           resolve();
         }
