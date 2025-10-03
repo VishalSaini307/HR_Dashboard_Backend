@@ -15,6 +15,7 @@ const app = express();
 // ---------------------
 const allowedOrigins = [
   "http://localhost:5173",
+  "https://hr-dashboard-frontend-five.vercel.app/",
   "https://hr-dashboard-backend-vishal.vercel.app",
   /\.vercel\.app$/ // allow all vercel preview deployments
 ];
