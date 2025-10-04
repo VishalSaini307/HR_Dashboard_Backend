@@ -69,6 +69,21 @@ app.use(async (_req: Request, _res: Response, next: NextFunction) => {
   }
 });
 
+// Add this middleware before your routes
+app.use((req, res, next) => {
+  if (req.method === 'POST') {
+    console.log('📨 POST Request Received:', {
+      method: req.method,
+      url: req.url,
+      path: req.path,
+      body: req.body,
+      origin: req.headers.origin,
+      'content-type': req.headers['content-type']
+    });
+  }
+  next();
+});
+
 // ---------------------
 // Routes
 // ---------------------
