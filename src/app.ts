@@ -68,6 +68,13 @@ app.use(async (_req: Request, _res: Response, next: NextFunction) => {
     next(err);
   }
 });
+app.use((req, res, next) => {
+  if (req.method === "POST") {
+    console.log("📨 POST Request Received:", req.method, req.url, req.body);
+  }
+  next();
+});
+
 
 // Add this middleware before your routes
 app.use((req, res, next) => {
