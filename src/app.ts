@@ -14,23 +14,28 @@ const app = express();
 // CORS setup
 // ---------------------
 const allowedOrigins = [
-  "http://localhost:5173",
-  "https://hr-dashboard-frontend-five.vercel.app",
-  "https://hr-dashboard-backend-vishal.vercel.app",
-  /\.vercel\.app$/ // allow all vercel preview deployments
+  "http://localhost:5173", // local dev
+  "https://hr-dashboard-frontend-five.vercel.app", // your frontend prod
+  /\.vercel\.app$/ // allow all vercel preview deployments (frontend + backend)
 ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow server-to-server requests
+      if (!origin) return callback(null, true); // server-to-server requests (like Postman)
+
+      console.log("🌍 Incoming Request Origin:", origin);
 
       const allowed = allowedOrigins.some((o) =>
         typeof o === "string" ? o === origin : o.test(origin)
       );
 
-      if (allowed) callback(null, true);
-      else callback(new Error("Not allowed by CORS"));
+      if (allowed) {
+        callback(null, true);
+      } else {
+        console.warn("❌ Blocked by CORS:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -38,6 +43,7 @@ app.use(
   })
 );
 
+// Preflight (OPTIONS) requests
 app.options("*", cors());
 
 // ---------------------
@@ -88,7 +94,7 @@ app.use((req: Request, res: Response) => {
 // Global error handler
 // ---------------------
 app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
-  console.error("Global error handler:", err);
+  console.error("🔥 Global error handler:", err);
   res.status(500).json({
     status: 500,
     message: "Internal Server Error",
