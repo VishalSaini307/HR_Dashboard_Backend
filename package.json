@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "type": "module",
  "scripts": {
-    "dev": "nodemon -e ts --watch src --exec \"node --no-warnings --loader ts-node/esm src/server.ts\"",
+    "dev": "nodemon -e ts --watch src --exec \"node --no-warnings --loader ts-node/esm src/index.ts\"",
     "build": "tsc",
-    "start": "node dist/src/server.js",
+    "start": "node dist/src/index.js",
     "vercel-build": "npm run build"
   },
   "dependencies": {
