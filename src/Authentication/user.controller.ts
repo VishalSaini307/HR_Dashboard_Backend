@@ -34,23 +34,52 @@ export const register = async (req: Request, res: Response) => {
 };
 
 // Login
+// Login - Improved version
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  
   if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required.' });
+    return res.status(400).json({ 
+      success: false,
+      message: 'Email and password are required.' 
+    });
   }
+  
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid email or password.' 
+      });
     }
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid email or password.' 
+      });
     }
+    
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-    return res.json({ token, expiresIn: 2 * 60 * 60 }); // 2 hours in seconds
+    
+    return res.json({ 
+      success: true,
+      message: 'Login successful',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        fullName: user.fullName
+      }
+    });
+    
   } catch (err) {
-    return res.status(500).json({ message: 'Server error.' });
+    console.error('Login error:', err);
+    return res.status(500).json({ 
+      success: false,
+      message: 'Internal server error' 
+    });
   }
 };
