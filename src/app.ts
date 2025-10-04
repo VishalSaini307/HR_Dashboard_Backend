@@ -14,9 +14,9 @@ const app = express();
 // CORS setup
 // ---------------------
 const allowedOrigins = [
-  "http://localhost:5173", // local dev
-  "https://hr-dashboard-frontend-five.vercel.app", // your frontend prod
-  /\.vercel\.app$/ // allow all vercel preview deployments (frontend + backend)
+"http://localhost:5173",
+  "https://hr-dashboard-frontend-five.vercel.app",
+  /\.vercel\.app$/  // allow preview deployments
 ];
 
 app.use(
