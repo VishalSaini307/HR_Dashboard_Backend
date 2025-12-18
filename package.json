@@ -2,10 +2,10 @@
   "name": "hr_dashboard",
   "version": "1.0.0",
   "type": "module",
- "scripts": {
-    "dev": "nodemon -e ts --watch src --exec \"node --no-warnings --loader ts-node/esm src/index.ts\"",
+  "scripts": {
+    "dev": "nodemon -e ts --watch src --exec \"node --no-warnings --loader ts-node/esm src/server.ts\"",
     "build": "tsc",
-    "start": "node dist/src/index.js",
+    "start": "node dist/src/server.js",
     "vercel-build": "npm run build"
   },
   "dependencies": {
@@ -19,6 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
     "multer": "^2.0.2",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "path-to-regexp": "^6.2.1",
     "serverless-http": "^4.0.0",
     "streamifier": "^0.1.1"
@@ -30,6 +32,8 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.2.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oauth20": "^2.0.17",
     "@types/streamifier": "^0.1.2",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",

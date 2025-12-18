@@ -1,12 +1,15 @@
+import 'dotenv/config';
 import express, { Request, Response, NextFunction } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
+import passport from 'passport';
 import { connectDB } from "./Database/db.js";
 import userRoutes from "./Authentication/user.routes.js";
+import { googleCallback } from "./Authentication/user.controller.js";
 import candidateRoutes from "./Module/Candidate/candidiate.routes.js";
 import employeeLeaveRoutes from "./Module/EmployeeLeave/employeeleave.routes.js";
+import './Middleware/google.passport.js';
 
-dotenv.config();
+
 
 const app = express();
 
@@ -49,6 +52,7 @@ app.options("*", cors());
 // ---------------------
 // Body parser
 // ---------------------
+app.use(passport.initialize());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -95,6 +99,10 @@ app.use((req, res, next) => {
 // Routes
 // ---------------------
 app.use("/api", userRoutes);
+
+// Also accept OAuth callback at the root path used in Google Console
+app.get('/auth/google/callback', passport.authenticate('google', { session: false }), googleCallback);
+
 app.use("/api/candidates", candidateRoutes);
 app.use("/api/employee-leaves", employeeLeaveRoutes);
 

@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from './user.model.js';
+import passport from 'passport';
+
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 const JWT_EXPIRES_IN = '2h';
@@ -54,6 +56,13 @@ export const login = async (req: Request, res: Response) => {
       });
     }
     
+    if (!user.password) {
+      return res.status(401).json({ 
+        success: false,
+        message: 'Invalid email or password.' 
+      });
+    }
+    
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ 
@@ -81,5 +90,35 @@ export const login = async (req: Request, res: Response) => {
       success: false,
       message: 'Internal server error' 
     });
+  }
+};
+export const googleAuth = passport.authenticate('google',{
+  scope:['profile','email']
+});
+
+export const googleCallback = async (req : Request , res : Response)=>{
+  try {
+    const user = req.user as any
+
+    const token = jwt.sign(
+      {userId : user._id},
+      JWT_SECRET,
+      {expiresIn :  JWT_EXPIRES_IN }
+      
+    );
+   // Use root frontend URL by default and trim trailing slash if present
+
+const frontendBase = (process.env.FRONTEND_URL || 'https://hr-dashboard-frontend-five.vercel.app/').replace(/\/$/, '');
+const redirectUrl = `${frontendBase}/google-success?token=${encodeURIComponent(token)}`;
+
+console.log('🔁 Redirecting OAuth callback to:', redirectUrl);
+    // If the request expects JSON, return JSON; otherwise redirect browser to frontend
+    if (req.headers.accept?.includes('application/json')) {
+      return res.json({ success: true, token, user });
+    }
+
+    return res.redirect(redirectUrl);
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Google Authentication Failed' });
   }
 };
