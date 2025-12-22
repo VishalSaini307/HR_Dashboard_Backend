@@ -1,12 +1,16 @@
 import app from "./app.js";
+import { connectRedis } from "./Cache/redis.js";
 import { connectDB } from "./Database/db.js";
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    await connectDB();  // ✅ connect once before server starts
+    await connectDB();  // ✅ connect once before server starts.
+    await connectRedis();
     console.log("✅ Database connected successfully");
+    console.log("✅ Redis  connected successfully");
+
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running at http://localhost:${PORT}`);

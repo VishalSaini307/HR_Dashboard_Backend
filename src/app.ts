@@ -8,6 +8,7 @@ import { googleCallback } from "./Authentication/user.controller.js";
 import candidateRoutes from "./Module/Candidate/candidiate.routes.js";
 import employeeLeaveRoutes from "./Module/EmployeeLeave/employeeleave.routes.js";
 import './Middleware/google.passport.js';
+import { timeStamp } from 'console';
 
 
 
@@ -112,7 +113,15 @@ app.use("/api/employee-leaves", employeeLeaveRoutes);
 app.get("/", (_req, res) => {
   res.send("🚀 Server is running!");
 });
-
+app.get("/health", (req , res) =>{
+  res.status(200).json({
+    status: "Ok",
+    server : "Running",
+    database : "Connected",
+    redis : "Connected",
+    timeStamp : new Date()
+  })
+})
 // ---------------------
 // 404 handler
 // ---------------------

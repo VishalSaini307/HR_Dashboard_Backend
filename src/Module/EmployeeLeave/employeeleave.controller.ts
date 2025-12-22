@@ -3,6 +3,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import EmployeeLeave from '../EmployeeLeave/employeeleave.model.js';
+import { getCache, setCache, deleteCache } from '../../Cache/cacheHelper.js';
 
 export const createEmployeeLeave = async (req: Request, res: Response) => {
 	try {
@@ -20,6 +21,10 @@ export const createEmployeeLeave = async (req: Request, res: Response) => {
 			reason: req.body.reason,
 			attendanceStatus: req.body.attendanceStatus || 'Absent'
 		});
+
+		// Invalidate list cache
+		await deleteCache('employeeLeaves:all');
+
 		res.status(201).json(leave);
 	} catch (error: any) {
 		res.status(500).json({ error: error.message });
@@ -27,9 +32,15 @@ export const createEmployeeLeave = async (req: Request, res: Response) => {
 };
 
 export const getEmployeeLeaves = async (_req: Request, res: Response) => {
+	const cacheKey = 'employeeLeaves:all';
 	try {
+		const cached = await getCache(cacheKey);
+		if (cached) {
+			return res.json({ success: true, data: cached, fromCache: true });
+		}
 		const leaves = await EmployeeLeave.find();
-		res.json(leaves);
+		await setCache(cacheKey, leaves);
+		res.json({ success: true, data: leaves });
 	} catch (error: any) {
 		res.status(500).json({ error: error.message });
 	}
@@ -37,9 +48,15 @@ export const getEmployeeLeaves = async (_req: Request, res: Response) => {
 
 export const getEmployeeLeaveById = async (req: Request, res: Response) => {
 	try {
+		const cacheKey = `employeeLeave:${req.params.id}`;
+		const cached = await getCache(cacheKey);
+		if (cached) return res.json({ success: true, data: cached, fromCache: true });
+
 		const leave = await EmployeeLeave.findById(req.params.id);
 		if (!leave) return res.status(404).json({ error: 'Leave not found' });
-		res.json(leave);
+
+		await setCache(cacheKey, leave);
+		res.json({ success: true, data: leave });
 	} catch (error: any) {
 		res.status(500).json({ error: error.message });
 	}
@@ -55,6 +72,11 @@ export const updateEmployeeLeave = async (req: Request, res: Response) => {
 		if (!leave) {
 			return res.status(404).json({ error: 'Leave not found' });
 		}
+
+		// Invalidate caches
+		await deleteCache('employeeLeaves:all');
+		await deleteCache(`employeeLeave:${req.params.id}`);
+
 		res.json(leave);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -65,6 +87,11 @@ export const deleteEmployeeLeave = async (req: Request, res: Response) => {
 	try {
 		const leave = await EmployeeLeave.findByIdAndDelete(req.params.id);
 		if (!leave) return res.status(404).json({ error: 'Leave not found' });
+
+		// Invalidate caches
+		await deleteCache('employeeLeaves:all');
+		await deleteCache(`employeeLeave:${req.params.id}`);
+
 		res.json({ message: 'Leave deleted' });
 	} catch (error: any) {
 		res.status(500).json({ error: error.message });

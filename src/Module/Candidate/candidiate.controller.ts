@@ -1,6 +1,7 @@
 import Candidate from './candidiate.model.js';
 import { Request, Response } from 'express';
 import axios from 'axios';
+import { setCache , deleteCache ,getCache} from '../../Cache/cacheHelper.js';
 
 export const createCandidate = async (req: Request, res: Response) => {
   try {
@@ -30,6 +31,7 @@ export const createCandidate = async (req: Request, res: Response) => {
       experience: req.body.experience,
       resume: req.body.resume
     });
+    await deleteCache('candidates:all'); // or setCache('candidates:all', null)
     res.status(201).json(candidate);
   } catch (error: any) {
     console.error('Error creating candidate:', error);
@@ -38,9 +40,15 @@ export const createCandidate = async (req: Request, res: Response) => {
 };
 
 export const getCandidates = async (_req: Request, res: Response) => {
+  const cacheKey = "candidates:all";
   try {
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      return res.json({ success: true, data: cached, fromCache: true });
+    }
     const candidates = await Candidate.find();
-    res.json(candidates);
+    await setCache(cacheKey, candidates);
+    res.json({ success: true, data: candidates });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -48,16 +56,22 @@ export const getCandidates = async (_req: Request, res: Response) => {
 
 export const getCandidateById = async (req: Request, res: Response) => {
   try {
+    const cacheKey = `candidate:${req.params.id}`;
+    const cached = await getCache(cacheKey);
+    if (cached) return res.json({ success: true, data: cached, fromCache: true });
+
     const candidate = await Candidate.findById(req.params.id);
     if (!candidate) return res.status(404).json({ error: 'Candidate not found' });
-    res.json(candidate);
+
+    await setCache(cacheKey, candidate);
+    res.json({ success: true, data: candidate });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
 
 export const updateCandidate = async (req: Request, res: Response) => {
-  try { 
+  try {
     if (req.body.status === 'Selected') {
       req.body.dateJoining = new Date();
     }
@@ -69,6 +83,11 @@ export const updateCandidate = async (req: Request, res: Response) => {
     if (!candidate) {
       return res.status(404).json({ error: 'Candidate not found' });
     }
+
+    // Invalidate caches
+    await deleteCache('candidates:all');
+    await deleteCache(`candidate:${req.params.id}`);
+
     res.json(candidate);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -79,6 +98,11 @@ export const deleteCandidate = async (req: Request, res: Response) => {
   try {
     const candidate = await Candidate.findByIdAndDelete(req.params.id);
     if (!candidate) return res.status(404).json({ error: 'Candidate not found' });
+
+    // Invalidate caches
+    await deleteCache('candidates:all');
+    await deleteCache(`candidate:${req.params.id}`);
+
     res.json({ message: 'Candidate deleted' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
