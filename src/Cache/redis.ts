@@ -1,8 +1,7 @@
 import { createClient } from "redis";
 
-const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
-const REDIS_PORT = parseInt(process.env.REDIS_PORT || '6379');
-const REDIS_URL = `redis://${REDIS_HOST}:${REDIS_PORT}`;
+// Use REDIS_URL if available (Railway, production), otherwise construct from host/port (local dev)
+const REDIS_URL = process.env.REDIS_URL || `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || '6379'}`;
 
 export const redisClient = createClient({
     url: REDIS_URL,
