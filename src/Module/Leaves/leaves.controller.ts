@@ -1,5 +1,6 @@
 import Leave from './leaves.models.js';
 import { Request, Response } from 'express';
+import { getCache, setCache, deleteCache } from '../../Cache/cacheHelper.js';
 
 // Create a new leave
 export const createLeave = async (req: Request, res: Response) => {
@@ -36,8 +37,16 @@ export const createLeave = async (req: Request, res: Response) => {
 
 // Get all leaves
 export const getLeaves = async (_req: Request, res: Response) => {
+  const cacheKey = 'leaves:all';
   try {
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      console.log('✅ [DATA SOURCE] Request served from Redis Cache');
+      return res.json(cached);
+    }
+    console.log('🗄️ [DATA SOURCE] Fetching from MongoDB Database');
     const leaves = await Leave.find().populate('employee');
+    await setCache(cacheKey, leaves);
     res.json(leaves);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -47,8 +56,16 @@ export const getLeaves = async (_req: Request, res: Response) => {
 // Get leave by ID
 export const getLeaveById = async (req: Request, res: Response) => {
   try {
+    const cacheKey = `leave:${req.params.id}`;
+    const cached = await getCache(cacheKey);
+    if (cached) {
+      console.log('✅ [DATA SOURCE] Request served from Redis Cache');
+      return res.json(cached);
+    }
+    console.log('🗄️ [DATA SOURCE] Fetching from MongoDB Database');
     const leave = await Leave.findById(req.params.id).populate('employee');
     if (!leave) return res.status(404).json({ error: 'Leave not found' });
+    await setCache(cacheKey, leave);
     res.json(leave);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
@@ -66,6 +83,9 @@ export const updateLeave = async (req: Request, res: Response) => {
     if (!leave) {
       return res.status(404).json({ error: 'Leave not found' });
     }
+    // Invalidate caches
+    await deleteCache('leaves:all');
+    await deleteCache(`leave:${req.params.id}`);
     res.json(leave);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -77,6 +97,9 @@ export const deleteLeave = async (req: Request, res: Response) => {
   try {
     const leave = await Leave.findByIdAndDelete(req.params.id);
     if (!leave) return res.status(404).json({ error: 'Leave not found' });
+    // Invalidate caches
+    await deleteCache('leaves:all');
+    await deleteCache(`leave:${req.params.id}`);
     res.json({ message: 'Leave deleted' });
   } catch (error: any) {
     res.status(500).json({ error: error.message });

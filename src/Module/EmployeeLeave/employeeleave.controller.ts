@@ -36,8 +36,10 @@ export const getEmployeeLeaves = async (_req: Request, res: Response) => {
 	try {
 		const cached = await getCache(cacheKey);
 		if (cached) {
+			console.log('✅ [DATA SOURCE] Request served from Redis Cache');
 			return res.json({ success: true, data: cached, fromCache: true });
 		}
+		console.log('🗄️ [DATA SOURCE] Fetching from MongoDB Database');
 		const leaves = await EmployeeLeave.find();
 		await setCache(cacheKey, leaves);
 		res.json({ success: true, data: leaves });
@@ -50,8 +52,12 @@ export const getEmployeeLeaveById = async (req: Request, res: Response) => {
 	try {
 		const cacheKey = `employeeLeave:${req.params.id}`;
 		const cached = await getCache(cacheKey);
-		if (cached) return res.json({ success: true, data: cached, fromCache: true });
+		if (cached) {
+			console.log('✅ [DATA SOURCE] Request served from Redis Cache');
+			return res.json({ success: true, data: cached, fromCache: true });
+		}
 
+		console.log('🗄️ [DATA SOURCE] Fetching from MongoDB Database');
 		const leave = await EmployeeLeave.findById(req.params.id);
 		if (!leave) return res.status(404).json({ error: 'Leave not found' });
 

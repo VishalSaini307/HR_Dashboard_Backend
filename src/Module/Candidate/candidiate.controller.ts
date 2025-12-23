@@ -44,8 +44,10 @@ export const getCandidates = async (_req: Request, res: Response) => {
   try {
     const cached = await getCache(cacheKey);
     if (cached) {
+      console.log('✅ [DATA SOURCE] Request served from Redis Cache');
       return res.json({ success: true, data: cached, fromCache: true });
     }
+    console.log('🗄️ [DATA SOURCE] Fetching from MongoDB Database');
     const candidates = await Candidate.find();
     await setCache(cacheKey, candidates);
     res.json({ success: true, data: candidates });
@@ -58,8 +60,12 @@ export const getCandidateById = async (req: Request, res: Response) => {
   try {
     const cacheKey = `candidate:${req.params.id}`;
     const cached = await getCache(cacheKey);
-    if (cached) return res.json({ success: true, data: cached, fromCache: true });
+    if (cached) {
+      console.log('✅ [DATA SOURCE] Request served from Redis Cache');
+      return res.json({ success: true, data: cached, fromCache: true });
+    }
 
+    console.log('🗄️ [DATA SOURCE] Fetching from MongoDB Database');
     const candidate = await Candidate.findById(req.params.id);
     if (!candidate) return res.status(404).json({ error: 'Candidate not found' });
 
